@@ -54,6 +54,7 @@ resolve_build_args() {
             --build-arg "PIP_INDEX_URL=${ROBODOJO_PIP_INDEX_URL:-https://pypi.tuna.tsinghua.edu.cn/simple}"
             --build-arg "MINICONDA_URL=${ROBODOJO_MINICONDA_URL:-https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh}"
             --build-arg "CONDA_CHANNEL_MIRROR=${ROBODOJO_CONDA_CHANNEL_MIRROR:-https://mirrors.tuna.tsinghua.edu.cn/anaconda}"
+            --build-arg "TORCH_INDEX_URL=${ROBODOJO_TORCH_INDEX_URL:-https://mirror.nju.edu.cn/pytorch/whl/cu128}"
         )
     fi
 }

@@ -37,7 +37,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PIP_USER=0 \
     PYTHONNOUSERSITE=1 \
     FORCE_CUDA=1 \
-    TORCH_CUDA_ARCH_LIST="7.0;7.5;8.0;8.6;8.9;9.0+PTX"
+    TORCH_CUDA_ARCH_LIST="7.0;7.5;8.0;8.6;8.9;9.0;12.0+PTX"
 
 # ── Optional China mirrors (build args; defaults = official upstreams) ─────────
 # The image is unchanged for normal builds. On a China network, enable mirrors:
@@ -46,6 +46,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 #     --build-arg PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple \
 #     --build-arg MINICONDA_URL=https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh \
 #     --build-arg CONDA_CHANNEL_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/anaconda \
+#     --build-arg TORCH_INDEX_URL=https://mirror.nju.edu.cn/pytorch/whl/cu128 \
 #     -t robodojo:cuda12.8 .
 # (docker/smoke_docker.sh sets all of these when ROBODOJO_CN_MIRRORS=1.)
 ARG UBUNTU_MIRROR=""
@@ -150,10 +151,12 @@ RUN python -m pip install --upgrade pip && \
 
 # ── PyTorch (cu128) + Isaac Sim 5.1 ──────────────────────────────────────────
 # setup_isaacsim() from scripts/install.sh.
+ARG TORCH_INDEX_URL="https://download.pytorch.org/whl/cu128"
+ARG ISAACSIM_INDEX_URL="https://pypi.nvidia.com"
 RUN python -m pip install "numpy==1.26.0" "typing_extensions==4.12.2" "filelock==3.13.1" && \
     python -m pip install torch==2.7.0 torchvision==0.22.0 torchaudio==2.7.0 \
-        --index-url https://download.pytorch.org/whl/cu128 && \
-    python -m pip install "isaacsim[all,extscache]==5.1.0" --extra-index-url https://pypi.nvidia.com
+        --index-url "${TORCH_INDEX_URL}" && \
+    python -m pip install "isaacsim[all,extscache]==5.1.0" --extra-index-url "${ISAACSIM_INDEX_URL}"
 
 # ── IsaacLab + CuRobo (built from the vendored submodules) ───────────────────
 # setup_isaaclab() + setup_curobo() + repin_after_curobo() from

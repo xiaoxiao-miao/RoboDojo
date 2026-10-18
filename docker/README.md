@@ -231,7 +231,8 @@ GPU wedge RTX init on the first frame). This requires `--gpus all` and
 `NVIDIA_DRIVER_CAPABILITIES=all` (set by default).
 
 **Build args.** `CUDA_IMAGE` (base image), plus the China mirrors `UBUNTU_MIRROR`,
-`PIP_INDEX_URL`, `MINICONDA_URL`, `CONDA_CHANNEL_MIRROR` (see the `Dockerfile`
+`PIP_INDEX_URL`, `MINICONDA_URL`, `CONDA_CHANNEL_MIRROR`, `TORCH_INDEX_URL`,
+`ISAACSIM_INDEX_URL` (see the `Dockerfile`
 header and [Appendix B](#appendix-b-china-networks)).
 
 **Validate the image without a policy server**
@@ -261,5 +262,12 @@ docker build \
   --build-arg PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple \
   --build-arg MINICONDA_URL=https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh \
   --build-arg CONDA_CHANNEL_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/anaconda \
+  --build-arg TORCH_INDEX_URL=https://mirror.nju.edu.cn/pytorch/whl/cu128 \
   -t robodojo:cuda12.8 .
 ```
+
+Isaac Sim wheels are only published on `pypi.nvidia.com` (PyPI mirrors carry
+placeholder sdists only), so that step still needs a working route abroad. On a
+slow route, pre-download the wheels on the host, serve them as a local simple
+index, and point the build at it with `--network host --build-arg
+ISAACSIM_INDEX_URL=http://127.0.0.1:<port>/simple`.
