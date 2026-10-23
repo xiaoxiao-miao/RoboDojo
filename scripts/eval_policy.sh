@@ -120,6 +120,11 @@ echo "[INFO] num_envs        = ${num_envs}"
 
 extra_args=()
 
+# ROBODOJO_HEADLESS=0 opens the Isaac Sim GUI (needs a reachable X display).
+if [[ "${ROBODOJO_HEADLESS:-1}" != "0" ]]; then
+  extra_args+=(--headless)
+fi
+
 KIT_ENABLE_EXTS=(
   "isaacsim.replicator.behavior"
   "isaacsim.sensors.camera"
@@ -157,7 +162,6 @@ while : ; do
     --additional_info "$additional_info" \
     --seed "$seed" \
     --host "$host" \
-    --headless \
     "${extra_args[@]}" \
     "$@"
   rc=$?
